@@ -1,19 +1,20 @@
-usestd::call::RefCall
+use std::cell::RefCell;
 
 thread_local! {
-    static MSG: RefCall<String> = RefCall::new(String::new());
+    static MSG: RefCell<String> = RefCell::new(String::new());
 }
+
 #[ic_cdk::update]
-fn sve_msg(msg:String)
-MSG.widht([static_msg] *static_msg.borrow_mut() = msg);
+fn save_msg(msg: String) {
+    MSG.with(|static_msg| *static_msg.borrow_mut() = msg);
+}
 
 #[ic_cdk::query]
 fn get_msg() -> String {
-    msg.with([static_msg] *static_msg.borrow_mut().clone())
+    MSG.with(|static_msg| static_msg.borrow().clone())
 }
 
-
-#[ic_cdk::query]"sta"
+#[ic_cdk::query]
 fn greet(name: String) -> String {
     format!("Hello, {}!", name)
 }
